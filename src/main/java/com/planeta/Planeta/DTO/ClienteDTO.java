@@ -14,15 +14,16 @@ public class ClienteDTO {
     private String mail;
 
     private List<PropiedadDTO> propiedades;
+    private List<ViajeDTO> viajes;
 
-    public ClienteDTO(Long id, String nombre, String apellido, String mail, List<PropiedadDTO> propiedades) {
+    public ClienteDTO(Long id, String nombre, String apellido, String mail, List<PropiedadDTO> propiedades, List<ViajeDTO> viajes) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.mail = mail;
         this.propiedades = propiedades;
+        this.viajes = viajes;
     }
-
 
     public ClienteDTO() {
 

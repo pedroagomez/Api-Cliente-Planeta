@@ -29,7 +29,7 @@ public class Viaje {
 
     private LocalDate fechaViaje;
 
-    @OneToMany(mappedBy = "viaje", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "viaje", orphanRemoval = true)
     private List<Pasajero> pasajeros = new ArrayList<>();
 
     public Viaje(Long id, Cliente cliente, Planeta destino, LocalDate fecha, List<Pasajero> pasajeros) {

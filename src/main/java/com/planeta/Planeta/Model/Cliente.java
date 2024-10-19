@@ -22,7 +22,7 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
     private List<ClientePlanetaPropiedad> propiedades;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
     private List<Viaje> viajes = new ArrayList<>();
 
 
@@ -38,13 +38,5 @@ public class Cliente {
 
     public Cliente() {
     }
-    public void addViaje(Viaje viaje) {
-        viajes.add(viaje);
-        viaje.setCliente(this);
-    }
 
-    public void removeViaje(Viaje viaje) {
-        viajes.remove(viaje);
-        viaje.setCliente(null);
-    }
 }
