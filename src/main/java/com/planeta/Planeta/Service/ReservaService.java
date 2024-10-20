@@ -76,24 +76,23 @@ public class ReservaService implements IReservaService {
     private void actualizarViaje(Viaje viaje, int cantidadPasajeros) {
 
         viaje.setAsientosDisponibles(viaje.getAsientosDisponibles() - cantidadPasajeros);
-        viajeService.actualizarViaje(viaje); // Asegúrate de tener este método
+        viajeService.actualizarViaje(viaje);
     }
 
     @Override
     public List<ReservaDTO> obtenerTodasLasReservas() {
-        List<Reserva> reservas = reservaRepo.findAll(); // Obtiene todas las reservas
+        List<Reserva> reservas = reservaRepo.findAll();
 
         return reservas.stream()
-                .map(this::mapearReservaADTO) // Mapea cada Reserva a ReservaDTO
+                .map(this::mapearReservaADTO)
                 .collect(Collectors.toList());
     }
     @Override
     public ReservaDTO obtenerReservaPorId(Long id) {
-        // Buscar la reserva por ID en el repositorio
+
         Reserva reserva = reservaRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reserva no encontrada con ID: " + id));
 
-        // Mapear la reserva a ReservaDTO
         return mapearReservaADTO(reserva);
     }
 

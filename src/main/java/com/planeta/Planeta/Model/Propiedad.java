@@ -19,6 +19,7 @@ public class Propiedad {
     @JoinColumn(name = "planeta_id")
     private Planeta planeta;
 
+
     private Double kilometrosCuadrados;
 
     public Propiedad(Long id, Cliente cliente, Planeta planeta, Double kilometrosCuadrados) {
@@ -30,4 +31,5 @@ public class Propiedad {
 
     public Propiedad() {
     }
+
 }

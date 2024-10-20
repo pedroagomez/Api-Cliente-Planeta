@@ -1,6 +1,7 @@
 package com.planeta.Planeta.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+
 public class ClientePlanetaPropiedad {
 
     @Id

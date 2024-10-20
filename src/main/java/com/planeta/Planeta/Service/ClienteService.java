@@ -56,6 +56,7 @@ public class ClienteService implements IClienteService {
         return dto;
     }
 
+
     // MAPEO RESERVAS
 
     private List<ReservaDTO> mapearReservasADTO(List<Reserva> reservas) {
@@ -131,17 +132,6 @@ public class ClienteService implements IClienteService {
         return dto;
     }
 
-
-
-
-
-
-
-
-
-
-
-
     @Override
     public List<ClienteDTO> obtenerCliente() {
         List<Cliente> clientes = clienteRepository.findAll(); // Obtén todos los clientes
@@ -155,6 +145,7 @@ public class ClienteService implements IClienteService {
                 .collect(Collectors.toList());
     }
 
+
     // Método para mapear un cliente a DTO
     private ClienteDTO mapearClienteADTO(Cliente cliente) {
         ClienteDTO dto = new ClienteDTO();
@@ -162,14 +153,28 @@ public class ClienteService implements IClienteService {
         dto.setNombre(cliente.getNombre());
         dto.setApellido(cliente.getApellido());
         dto.setMail(cliente.getMail());
-        dto.setPropiedades(mapearPropiedadesADTO(cliente.getPropiedades()));
-        dto.setReservas(mapearReservasADTO(cliente.getReservas())); // Si deseas mapear reservas también
+
+        // Mapea propiedades sin clienteId y clienteNombre
+        List<ClientePlanetaPropiedadDTO> propiedadesDTO = cliente.getPropiedades().stream()
+                .map(propiedad -> new ClientePlanetaPropiedadDTO(
+                        propiedad.getId(),
+                        propiedad.getPlaneta().getId(),
+                        propiedad.getPlaneta().getNombre(),
+                        propiedad.getKilometrosCuadrados()))
+                .collect(Collectors.toList());
+
+        dto.setPropiedades(propiedadesDTO);
+        dto.setReservas(mapearReservasADTO(cliente.getReservas())); // Si deseas incluir reservas
         return dto;
     }
 
+
+
+
+
     @Override
     public void actualizarCliente(Cliente cliente) {
-
+            clienteRepository.save(cliente);
     }
 
     @Override

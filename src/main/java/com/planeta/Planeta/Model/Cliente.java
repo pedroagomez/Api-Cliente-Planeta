@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
+
 @Entity
 public class Cliente {
     @Id
@@ -20,13 +21,14 @@ public class Cliente {
     private String mail;
     private String password;
 
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
-    private List<Propiedad> propiedades;
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ClientePlanetaPropiedad> propiedades = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true) // Relación con Reserva corregida
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reserva> reservas = new ArrayList<>();
 
-    public Cliente(Long id, String nombre, String apellido, String mail, String password, List<Propiedad> propiedades, List<Reserva> reservas) {
+    // Constructor completo
+    public Cliente(Long id, String nombre, String apellido, String mail, String password, List<ClientePlanetaPropiedad> propiedades, List<Reserva> reservas) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -36,7 +38,7 @@ public class Cliente {
         this.reservas = reservas;
     }
 
-    public Cliente() {
-    }
-
+    // Constructor vacío
+    public Cliente() {}
 }
+
