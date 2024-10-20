@@ -1,6 +1,7 @@
 package com.planeta.Planeta.Service;
 
 import com.planeta.Planeta.DTO.PasajeroDTO;
+import com.planeta.Planeta.DTO.PlanetaDTO;
 import com.planeta.Planeta.DTO.ViajeDTO;
 import com.planeta.Planeta.Model.Cliente;
 import com.planeta.Planeta.Model.Pasajero;
@@ -25,11 +26,7 @@ public class ViajeService implements IViajeService {
     @Autowired
     private IViajeRepository viajeRepository;
     @Autowired
-    private IClienteRepository clienteRepository;
-    @Autowired
     private IPlanetaRepository planetaRepository;
-    @Autowired
-    private IPasajeroRepository pasajeroRepository;
 
     @Override
     public void crearViaje(Viaje viaje) {
@@ -40,84 +37,24 @@ public class ViajeService implements IViajeService {
     public ViajeDTO obtenerViajePorId(Long id) {
         Viaje viaje = viajeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Viaje no encontrado con id: " + id));
-
-        // Mapear a DTO
-        ViajeDTO dto = new ViajeDTO();
-        dto.setId(viaje.getId());
-
-        // Verificar si el cliente no es null
-        if (viaje.getCliente() != null) {
-            dto.setCliente_id(viaje.getCliente().getId());
-        } else {
-            dto.setCliente_id(null);
-        }
-
-        // Verificar si el destino no es null
-        if (viaje.getDestino() != null) {
-            dto.setPlaneta_id(viaje.getDestino().getId());
-        } else {
-            dto.setPlaneta_id(null);
-        }
-
-        List<PasajeroDTO> pasajerosDTO = viaje.getPasajeros().stream()
-                .map(this::mapearPasajeroADTO)
-                .collect(Collectors.toList());
-        dto.setListaPasajero(pasajerosDTO);
-
-        return dto;
+        return mapearViajeADTO(viaje);
     }
-
 
     @Override
     public List<ViajeDTO> obtenerTodosLosViajes() {
         List<Viaje> viajes = viajeRepository.findAll();
-
-        // Filtrar solo los viajes que tienen un cliente asignado
-        List<Viaje> viajesConCliente = viajes.stream()
-                .filter(viaje -> viaje.getCliente() != null)
-                .collect(Collectors.toList());
-
-        // Mapear los viajes filtrados a DTO
-        return viajesConCliente.stream()
+        return viajes.stream()
                 .map(this::mapearViajeADTO)
                 .collect(Collectors.toList());
     }
 
-
     @Override
-    @Transactional
-    public void actualizarViaje(Long id, Viaje viajeActualizado) {
+    public void actualizarViaje(Long id, ViajeDTO viajeDTO) {
         Viaje viajeExistente = viajeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Viaje no encontrado con id: " + id));
 
-        // Actualizar el cliente del viaje
-        if (viajeActualizado.getCliente() != null) {
-            Cliente cliente = clienteRepository.findById(viajeActualizado.getCliente().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con id: " + viajeActualizado.getCliente().getId()));
-            viajeExistente.setCliente(cliente);
-        }
-
-        // Actualizar el destino del viaje
-        if (viajeActualizado.getDestino() != null) {
-            Planeta destino = planetaRepository.findById(viajeActualizado.getDestino().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Planeta no encontrado con id: " + viajeActualizado.getDestino().getId()));
-            viajeExistente.setDestino(destino);
-        }
-
-        // Actualizar la fecha del viaje
-        if (viajeActualizado.getFechaViaje() != null) {
-            viajeExistente.setFechaViaje(viajeActualizado.getFechaViaje());
-        }
-
-        // Actualizar la lista de pasajeros si es necesario
-        if (viajeActualizado.getPasajeros() != null && !viajeActualizado.getPasajeros().isEmpty()) {
-            List<Pasajero> pasajeros = viajeActualizado.getPasajeros().stream()
-                    .map(pasajero -> pasajeroRepository.findById(pasajero.getId())
-                            .orElseThrow(() -> new EntityNotFoundException("Pasajero no encontrado con id: " + pasajero.getId())))
-                    .collect(Collectors.toList());
-            viajeExistente.setPasajeros(pasajeros);
-        }
-
+        actualizarViajeDesdeDTO(viajeExistente, viajeDTO);
+        viajeRepository.save(viajeExistente);
     }
 
     @Override
@@ -128,40 +65,62 @@ public class ViajeService implements IViajeService {
         viajeRepository.deleteById(id);
     }
 
-    private PasajeroDTO mapearPasajeroADTO(Pasajero pasajero) {
-        return new PasajeroDTO(
-                pasajero.getId(),
-                pasajero.getNombre(),
-                pasajero.getApellido(),
-                pasajero.getMail()
-        );
-    }
-
     private ViajeDTO mapearViajeADTO(Viaje viaje) {
         ViajeDTO viajeDTO = new ViajeDTO();
         viajeDTO.setId(viaje.getId());
 
-        // Verificar si el cliente no es null antes de acceder a su ID
-        if (viaje.getCliente() != null) {
-            viajeDTO.setCliente_id(viaje.getCliente().getId());
-        } else {
-            viajeDTO.setCliente_id(null);  // O puedes dejarlo sin setear si prefieres
-        }
-
-        // Verificar si el destino no es null antes de acceder a su ID
         if (viaje.getDestino() != null) {
-            viajeDTO.setPlaneta_id(viaje.getDestino().getId());
-        } else {
-            viajeDTO.setPlaneta_id(null);  // O puedes dejarlo sin setear si prefieres
+            viajeDTO.setPlanetaId(viaje.getDestino().getId());
+            viajeDTO.setPlanetaNombre(viaje.getDestino().getNombre());
+
+            // Crear PlanetaDTO
+            PlanetaDTO planetaDTO = new PlanetaDTO(
+                    viaje.getDestino().getId(),
+                    viaje.getDestino().getNombre(),
+                    viaje.getDestino().getTipo(),
+                    viaje.getDestino().getKmCuadrados()
+            );
+            viajeDTO.setDestino(planetaDTO);
         }
 
-        List<PasajeroDTO> pasajerosDTO = viaje.getPasajeros().stream()
-                .map(this::mapearPasajeroADTO)
-                .collect(Collectors.toList());
-        viajeDTO.setListaPasajero(pasajerosDTO);
+        viajeDTO.setFechaSalida(viaje.getFechaViaje());
+        viajeDTO.setAsientosDisponibles(viaje.getAsientosDisponibles());
+        viajeDTO.setPrecioPorPasajero(viaje.getPrecioPorPasajero());
+
+        // Si necesitas mapear los pasajeros, puedes hacerlo aquí
+        // viajeDTO.setPasajeros(mapearPasajeros(viaje.getPasajeros()));
 
         return viajeDTO;
     }
 
+    private Viaje mapearDTOAViaje(ViajeDTO viajeDTO) {
+        Viaje viaje = new Viaje();
+        viaje.setId(viajeDTO.getId());
+        Planeta destino = planetaRepository.findById(viajeDTO.getPlanetaId())
+                .orElseThrow(() -> new EntityNotFoundException("Planeta no encontrado con id: " + viajeDTO.getPlanetaId()));
+        viaje.setDestino(destino);
+        viaje.setFechaViaje(viajeDTO.getFechaSalida());
+        viaje.setAsientosDisponibles(viajeDTO.getAsientosDisponibles());
+        viaje.setPrecioPorPasajero(viajeDTO.getPrecioPorPasajero());
 
+        return viaje;
+    }
+
+    private void actualizarViajeDesdeDTO(Viaje viaje, ViajeDTO viajeDTO) {
+        if (viajeDTO.getPlanetaId() != null) {
+            Planeta destino = planetaRepository.findById(viajeDTO.getPlanetaId())
+                    .orElseThrow(() -> new EntityNotFoundException("Planeta no encontrado con id: " + viajeDTO.getPlanetaId()));
+            viaje.setDestino(destino);
+        }
+        if (viajeDTO.getFechaSalida() != null) {
+            viaje.setFechaViaje(viajeDTO.getFechaSalida());
+        }
+        if (viajeDTO.getAsientosDisponibles() != null) {
+            viaje.setAsientosDisponibles(viajeDTO.getAsientosDisponibles());
+        }
+        if (viajeDTO.getPrecioPorPasajero() != null) {
+            viaje.setPrecioPorPasajero(viajeDTO.getPrecioPorPasajero());
+        }
+
+    }
 }

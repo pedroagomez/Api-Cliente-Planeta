@@ -1,6 +1,7 @@
 package com.planeta.Planeta.Model;
 
 
+import com.planeta.Planeta.DTO.PlanetaDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,15 +29,19 @@ public class Viaje {
     private Planeta destino;
 
     private LocalDate fechaViaje;
+    private Integer asientosDisponibles;
+    private Double precioPorPasajero;
 
     @OneToMany(mappedBy = "viaje", orphanRemoval = true)
     private List<Pasajero> pasajeros = new ArrayList<>();
 
-    public Viaje(Long id, Cliente cliente, Planeta destino, LocalDate fecha, List<Pasajero> pasajeros) {
+    public Viaje(Long id, Cliente cliente, Planeta destino, LocalDate fechaViaje, Integer asientosDisponibles, Double precioPorPasajero, List<Pasajero> pasajeros) {
         this.id = id;
         this.cliente = cliente;
         this.destino = destino;
-        this.fechaViaje = fecha;
+        this.fechaViaje = fechaViaje;
+        this.asientosDisponibles = asientosDisponibles;
+        this.precioPorPasajero = precioPorPasajero;
         this.pasajeros = pasajeros;
     }
 

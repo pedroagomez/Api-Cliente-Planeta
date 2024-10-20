@@ -1,14 +1,8 @@
 package com.planeta.Planeta.Service;
 
 
-import com.planeta.Planeta.DTO.ClienteDTO;
-import com.planeta.Planeta.DTO.PasajeroDTO;
-import com.planeta.Planeta.DTO.PropiedadDTO;
-import com.planeta.Planeta.DTO.ViajeDTO;
-import com.planeta.Planeta.Model.Cliente;
-import com.planeta.Planeta.Model.ClientePlanetaPropiedad;
-import com.planeta.Planeta.Model.Pasajero;
-import com.planeta.Planeta.Model.Viaje;
+import com.planeta.Planeta.DTO.*;
+import com.planeta.Planeta.Model.*;
 import com.planeta.Planeta.Repository.IClienteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,14 +60,44 @@ public class ClienteService implements IClienteService {
     }
 
 
-
     private ViajeDTO mapearViaje(Viaje viaje) {
-        Long clienteId = (viaje.getCliente() != null) ? viaje.getCliente().getId() : null;
+        PlanetaDTO planetaDTO = null;
+        Long planetaId = null;
+        String planetaNombre = null;
+
+        if (viaje.getDestino() != null) {
+            Planeta planeta = viaje.getDestino();
+            planetaId = planeta.getId();
+            planetaNombre = planeta.getNombre();
+
+            // Creamos el PlanetaDTO de manera segura
+            planetaDTO = new PlanetaDTO();
+            planetaDTO.setId(planetaId);
+            planetaDTO.setNombre(planetaNombre);
+
+            // Intentamos establecer el tipo y kmCuadrados si están disponibles
+            try {
+                planetaDTO.setTipo(planeta.getTipo());
+            } catch (Exception e) {
+                // Si no existe el método getTipo(), simplemente lo dejamos como null
+            }
+
+            try {
+                planetaDTO.setKmCuadrados(planeta.getKmCuadrados());
+            } catch (Exception e) {
+                // Si no existe el método getKmCuadrados(), o si devuelve un tipo incompatible, lo dejamos como 0
+                planetaDTO.setKmCuadrados(0);
+            }
+        }
 
         return new ViajeDTO(
                 viaje.getId(),
-                clienteId,  // Esto previene el NullPointerException
-                viaje.getDestino().getId(),
+                planetaId,
+                planetaNombre,
+                viaje.getFechaViaje(),
+                planetaDTO,
+                viaje.getAsientosDisponibles(),
+                viaje.getPrecioPorPasajero(),
                 mapearPasajeros(viaje.getPasajeros())
         );
     }

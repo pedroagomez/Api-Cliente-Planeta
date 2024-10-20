@@ -8,11 +8,11 @@ import java.util.List;
 public interface IReservaService {
 
 
-    void realizarReserva(Reserva reserva);
-    List<ReservaDTO>obtenerTodasLasReservas();
+    void crearReserva(Reserva reserva);
+    List<ReservaDTO> obtenerReservas();
     ReservaDTO obtenerReservaPorId(Long id);
-    void cancelarReserva(Long id);
-    void modificarReserva(Reserva reserva);
+    void eliminarReserva(Long id);
+
 
 
 }

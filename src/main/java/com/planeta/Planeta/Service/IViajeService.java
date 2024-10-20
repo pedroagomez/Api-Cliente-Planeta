@@ -9,6 +9,7 @@ public interface IViajeService {
     void crearViaje(Viaje viaje);
     ViajeDTO obtenerViajePorId(Long id);
     List<ViajeDTO> obtenerTodosLosViajes();
-    void actualizarViaje(Long id, Viaje viajeDTO);
+    void actualizarViaje(Long id, ViajeDTO viajeDTO);
     void eliminarViaje(Long id);
+
 }

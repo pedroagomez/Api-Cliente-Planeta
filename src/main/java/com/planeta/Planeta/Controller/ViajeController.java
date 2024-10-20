@@ -38,7 +38,7 @@ public class ViajeController {
     }
 
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<?> actualizarViaje(@PathVariable Long id, @RequestBody Viaje viaje)
+    public ResponseEntity<?> actualizarViaje(@PathVariable Long id, @RequestBody ViajeDTO viaje)
     {
         viajeService.actualizarViaje(id, viaje);
         return ResponseEntity.ok().build();

@@ -14,12 +14,15 @@ public class ReservaDTO {
     private Date fechaReserva;
     private Integer cantidadPasajeros;
 
-    public ReservaDTO(Long id, Long clienteId, Long viajeId, Date fechaReserva, Integer cantidadPasajeros) {
+    private Double precioTotal;
+
+    public ReservaDTO(Long id, Long clienteId, Long viajeId, Date fechaReserva, Integer cantidadPasajeros, Double precioTotal) {
         this.id = id;
         this.clienteId = clienteId;
         this.viajeId = viajeId;
         this.fechaReserva = fechaReserva;
         this.cantidadPasajeros = cantidadPasajeros;
+        this.precioTotal = precioTotal;
     }
 
     public ReservaDTO() {
