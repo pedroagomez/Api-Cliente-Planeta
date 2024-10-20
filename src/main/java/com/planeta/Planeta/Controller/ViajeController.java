@@ -3,7 +3,9 @@ package com.planeta.Planeta.Controller;
 import com.planeta.Planeta.DTO.ViajeDTO;
 import com.planeta.Planeta.Model.Viaje;
 import com.planeta.Planeta.Service.IViajeService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +26,14 @@ public class ViajeController {
     }
 
     @GetMapping("/traer/{id}")
-    public ResponseEntity<ViajeDTO> obtenerViajePorId(@PathVariable Long id)
-    {
-        ViajeDTO viaje = viajeService.obtenerViajePorId(id);
-        return ResponseEntity.ok(viaje);
+    public ResponseEntity<Viaje> obtenerViajePorId(@PathVariable Long id) {
+        try {
+            Viaje viaje = viajeService.obtenerViajePorId(id);
+            return ResponseEntity.ok(viaje);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
-
     @PostMapping("/crear")
     public ResponseEntity<?> crearViaje(@RequestBody Viaje viaje)
     {
@@ -37,12 +41,7 @@ public class ViajeController {
         return ResponseEntity.created(null).build();
     }
 
-    @PutMapping("/actualizar/{id}")
-    public ResponseEntity<?> actualizarViaje(@PathVariable Long id, @RequestBody Viaje viaje)
-    {
-        viajeService.actualizarViaje(id, viaje);
-        return ResponseEntity.ok().build();
-    }
+
 
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminarViaje(@PathVariable Long id)

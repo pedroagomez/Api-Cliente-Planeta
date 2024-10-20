@@ -12,17 +12,16 @@ public class ClienteDTO {
     private String nombre;
     private String apellido;
     private String mail;
-
     private List<PropiedadDTO> propiedades;
-    private List<ViajeDTO> viajes;
+    private List<ReservaDTO> reservas;
 
-    public ClienteDTO(Long id, String nombre, String apellido, String mail, List<PropiedadDTO> propiedades, List<ViajeDTO> viajes) {
+    public ClienteDTO(Long id, String nombre, String apellido, String mail, List<PropiedadDTO> propiedades, List<ReservaDTO> reservas) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.mail = mail;
         this.propiedades = propiedades;
-        this.viajes = viajes;
+        this.reservas = reservas;
     }
 
     public ClienteDTO() {

@@ -12,7 +12,7 @@ public interface IReservaService {
     List<ReservaDTO>obtenerTodasLasReservas();
     ReservaDTO obtenerReservaPorId(Long id);
     void cancelarReserva(Long id);
-    void modificarReserva(Reserva reserva);
+
 
 
 }

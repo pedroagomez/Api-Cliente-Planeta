@@ -13,18 +13,18 @@ public class Pasajero {
     private Long id;
     private String nombre;
     private String apellido;
-    private String mail;
+    private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "viaje_id")
-    private Viaje viaje;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reserva_id")
+    private Reserva reserva;
 
-    public Pasajero(Long id, String nombre, String apellido, String mail, Viaje viaje) {
+    public Pasajero(Long id, String nombre, String apellido, String email, Reserva reserva) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.mail = mail;
-        this.viaje = viaje;
+        this.email = email;
+        this.reserva = reserva;
     }
 
     public Pasajero() {

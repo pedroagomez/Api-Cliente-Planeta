@@ -12,7 +12,7 @@ public interface IPasajeroService {
     PasajeroDTO obtenerPasajeroPorId(Long id);
     List<PasajeroDTO>ObtenerListaPasajeros();
 
-    void actualizarPasajero(Long id, Pasajero pasajero);
+    void actualizarPasajero(Long id, PasajeroDTO pasajeroDTO);
 
     void eliminarPasajero(Long id);
 

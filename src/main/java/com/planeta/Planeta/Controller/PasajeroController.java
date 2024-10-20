@@ -40,7 +40,7 @@ public class PasajeroController {
 
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<PasajeroDTO> actualizarPasajero(@PathVariable Long id,
-                                                          @RequestBody Pasajero pasajero)
+                                                          @RequestBody PasajeroDTO pasajero)
     {
         pasajeroService.actualizarPasajero(id,pasajero);
         return ResponseEntity.ok().build();

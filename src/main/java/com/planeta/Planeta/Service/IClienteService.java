@@ -9,7 +9,7 @@ public interface IClienteService {
 
     void createCliente(Cliente cliente);
 
-    ClienteDTO obtenerClientePorId(Long id);
+    Cliente obtenerClientePorId(Long id);
     List<ClienteDTO> obtenerCliente();
 
     void actualizarCliente(Cliente cliente);

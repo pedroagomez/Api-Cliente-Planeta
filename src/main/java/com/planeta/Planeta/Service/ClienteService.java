@@ -1,19 +1,14 @@
 package com.planeta.Planeta.Service;
 
 
-import com.planeta.Planeta.DTO.ClienteDTO;
-import com.planeta.Planeta.DTO.PasajeroDTO;
-import com.planeta.Planeta.DTO.PropiedadDTO;
-import com.planeta.Planeta.DTO.ViajeDTO;
-import com.planeta.Planeta.Model.Cliente;
-import com.planeta.Planeta.Model.ClientePlanetaPropiedad;
-import com.planeta.Planeta.Model.Pasajero;
-import com.planeta.Planeta.Model.Viaje;
+import com.planeta.Planeta.DTO.*;
+import com.planeta.Planeta.Model.*;
 import com.planeta.Planeta.Repository.IClienteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,110 +16,164 @@ import java.util.stream.Collectors;
 public class ClienteService implements IClienteService {
 
     @Autowired
-    private IClienteRepository clienteRepo;
+    private IClienteRepository clienteRepository;
 
     @Override
     public void createCliente(Cliente cliente) {
-        clienteRepo.save(cliente);
+        clienteRepository.save(cliente);
     }
+
 
     @Override
-    public ClienteDTO obtenerClientePorId(Long id) {
-        Cliente cliente = clienteRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con id: " + id));
+    public Cliente obtenerClientePorId(Long id) {
+        // Busca el cliente en el repositorio
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con ID: " + id));
 
-        return new ClienteDTO(
-                cliente.getId(),
-                cliente.getNombre(),
-                cliente.getApellido(),
-                cliente.getMail(),
-                mapearPropiedades(cliente.getPropiedades()),
-                mapearViajes(cliente.getViajes())
-        );
+        return cliente;
     }
 
-    private List<PropiedadDTO> mapearPropiedades(List<ClientePlanetaPropiedad> propiedades) {
+    // METODOS DE MAPEO
+
+    private List<PropiedadDTO> mapearPropiedadesADTO(List<Propiedad> propiedades) {
+        if (propiedades == null) {
+            return new ArrayList<>(); // Devuelve una lista vacía si no hay propiedades
+        }
         return propiedades.stream()
-                .map(this::mapearPropiedad)
+                .map(this::mapearPropiedadADTO) // Mapea cada propiedad a su DTO
                 .collect(Collectors.toList());
     }
 
-    private PropiedadDTO mapearPropiedad(ClientePlanetaPropiedad propiedad) {
-        return new PropiedadDTO(
-                propiedad.getId(),
-                propiedad.getPlaneta().getId(),
-                propiedad.getKilometrosCuadrados()
-        );
+    private PropiedadDTO mapearPropiedadADTO(Propiedad propiedad) {
+        if (propiedad == null) {
+            return null; // Manejo de null
+        }
+        PropiedadDTO dto = new PropiedadDTO();
+        dto.setId(propiedad.getId());
+        dto.setClienteId(propiedad.getCliente().getId());
+        dto.setPlanetaId(propiedad.getPlaneta().getId());
+        dto.setKilometrosCuadrados(propiedad.getKilometrosCuadrados());
+        return dto;
     }
 
+    // MAPEO RESERVAS
 
-
-    private List<ViajeDTO> mapearViajes(List<Viaje> viajes) {
-        return viajes.stream()
-                .map(this::mapearViaje)
+    private List<ReservaDTO> mapearReservasADTO(List<Reserva> reservas) {
+        if (reservas == null) {
+            return new ArrayList<>(); // Devuelve una lista vacía si no hay reservas
+        }
+        return reservas.stream()
+                .map(this::mapearReservaADTO) // Mapea cada reserva a su DTO
                 .collect(Collectors.toList());
     }
 
-
-
-    private ViajeDTO mapearViaje(Viaje viaje) {
-        Long clienteId = (viaje.getCliente() != null) ? viaje.getCliente().getId() : null;
-
-        return new ViajeDTO(
-                viaje.getId(),
-                clienteId,  // Esto previene el NullPointerException
-                viaje.getDestino().getId(),
-                mapearPasajeros(viaje.getPasajeros())
-        );
+    private ReservaDTO mapearReservaADTO(Reserva reserva) {
+        if (reserva == null) {
+            return null; // Manejo de null
+        }
+        ReservaDTO dto = new ReservaDTO();
+        dto.setId(reserva.getId());
+        dto.setClienteId(reserva.getCliente().getId());
+        dto.setViaje(mapearViajeADTO(reserva.getViaje())); // Asegúrate de implementar este método
+        dto.setFechaReserva(reserva.getFechaReserva());
+        dto.setPasajeros(mapearPasajerosADTO(reserva.getPasajeros())); // Asegúrate de implementar este método
+        dto.setPrecioTotal(reserva.getPrecioTotal());
+        return dto;
     }
-    private List<PasajeroDTO> mapearPasajeros(List<Pasajero> pasajeros) {
+
+    private ViajeDTO mapearViajeADTO(Viaje viaje) {
+        if (viaje == null) {
+            return null; // Manejo de null
+        }
+        ViajeDTO dto = new ViajeDTO();
+        dto.setId(viaje.getId());
+        dto.setFechaSalida(viaje.getFechaViaje());
+        dto.setDestino(mapearPlanetaADTO(viaje.getDestino())); // Asegúrate de implementar este método
+        dto.setAsientosDisponibles(viaje.getAsientosDisponibles());
+        dto.setCapacidadTotal(viaje.getCapacidadTotal());
+        dto.setPrecioPorPasajero(viaje.getPrecioPorPasajero());
+        return dto;
+    }
+
+    private PlanetaDTO mapearPlanetaADTO(Planeta planeta) {
+        if (planeta == null) {
+            return null; // Manejo de null
+        }
+        PlanetaDTO dto = new PlanetaDTO();
+        dto.setId(planeta.getId());
+        dto.setNombre(planeta.getNombre());
+        dto.setTipo(planeta.getTipo());
+        dto.setKmCuadrados(planeta.getKmCuadrados());
+        return dto;
+    }
+
+
+
+    private List<PasajeroDTO> mapearPasajerosADTO(List<Pasajero> pasajeros) {
+        if (pasajeros == null) {
+            return new ArrayList<>(); // Devuelve una lista vacía si no hay pasajeros
+        }
         return pasajeros.stream()
-                .map(this::mapearPasajero)
+                .map(this::mapearPasajeroADTO) // Mapea cada pasajero a su DTO
                 .collect(Collectors.toList());
     }
 
-    private PasajeroDTO mapearPasajero(Pasajero pasajero) {
-        return new PasajeroDTO(
-                pasajero.getId(),
-                pasajero.getNombre(),
-                pasajero.getApellido(),
-                pasajero.getMail()
-        );
+    private PasajeroDTO mapearPasajeroADTO(Pasajero pasajero) {
+        if (pasajero == null) {
+            return null; // Manejo de null
+        }
+        PasajeroDTO dto = new PasajeroDTO();
+        dto.setId(pasajero.getId());
+        dto.setNombre(pasajero.getNombre());
+        dto.setApellido(pasajero.getApellido());
+        dto.setEmail(pasajero.getEmail());
+        dto.setReservaId(pasajero.getReserva().getId());
+        return dto;
     }
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public List<ClienteDTO> obtenerCliente() {
-        List<Cliente> clientes = clienteRepo.findAll();
-        return clientes.stream().map(cliente -> {
-            List<PropiedadDTO> propiedades = mapearPropiedades(cliente.getPropiedades());
-            List<ViajeDTO> viajes = mapearViajes(cliente.getViajes());
-            return new ClienteDTO(
-                    cliente.getId(),
-                    cliente.getNombre(),
-                    cliente.getApellido(),
-                    cliente.getMail(),
-                    propiedades,
-                    viajes
-            );
-        }).collect(Collectors.toList());
+        List<Cliente> clientes = clienteRepository.findAll(); // Obtén todos los clientes
+        return mapearClientesADTO(clientes); // Mapea cada cliente a ClienteDTO
     }
 
+    // Método para mapear una lista de clientes a DTOs
+    private List<ClienteDTO> mapearClientesADTO(List<Cliente> clientes) {
+        return clientes.stream()
+                .map(this::mapearClienteADTO) // Mapea cada Cliente a ClienteDTO
+                .collect(Collectors.toList());
+    }
 
-
+    // Método para mapear un cliente a DTO
+    private ClienteDTO mapearClienteADTO(Cliente cliente) {
+        ClienteDTO dto = new ClienteDTO();
+        dto.setId(cliente.getId());
+        dto.setNombre(cliente.getNombre());
+        dto.setApellido(cliente.getApellido());
+        dto.setMail(cliente.getMail());
+        dto.setPropiedades(mapearPropiedadesADTO(cliente.getPropiedades()));
+        dto.setReservas(mapearReservasADTO(cliente.getReservas())); // Si deseas mapear reservas también
+        return dto;
+    }
 
     @Override
     public void actualizarCliente(Cliente cliente) {
-        if (!clienteRepo.existsById(cliente.getId())) {
-            throw new EntityNotFoundException("No se puede actualizar. Cliente no encontrado con id: " + cliente.getId());
-        }
-        clienteRepo.save(cliente); // Actualiza el cliente
+
     }
 
     @Override
     public void eliminarCliente(Long id) {
-        if (!clienteRepo.existsById(id)) {
-            throw new EntityNotFoundException("Cliente no encontrado con id: " + id);
-        }
-        clienteRepo.deleteById(id); // Elimina el cliente
+        clienteRepository.deleteById(id);
     }
 }

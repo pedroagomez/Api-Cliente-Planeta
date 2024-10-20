@@ -20,24 +20,27 @@ public class Viaje {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "planeta_id")
     private Planeta destino;
 
     private LocalDate fechaViaje;
 
-    @OneToMany(mappedBy = "viaje", orphanRemoval = true)
-    private List<Pasajero> pasajeros = new ArrayList<>();
+    private Integer capacidadTotal;
+    private Integer asientosDisponibles;
+    private Double precioPorPasajero;
 
-    public Viaje(Long id, Cliente cliente, Planeta destino, LocalDate fecha, List<Pasajero> pasajeros) {
+    @OneToMany(mappedBy = "viaje")
+    private List<Reserva> reservas = new ArrayList<>();
+
+
+    public Viaje(Long id, Planeta destino, LocalDate fechaViaje, Integer capacidadTotal, Integer asientosDisponibles, Double precioPorPasajero, List<Reserva> reservas) {
         this.id = id;
-        this.cliente = cliente;
         this.destino = destino;
-        this.fechaViaje = fecha;
-        this.pasajeros = pasajeros;
+        this.fechaViaje = fechaViaje;
+        this.capacidadTotal = capacidadTotal;
+        this.asientosDisponibles = asientosDisponibles;
+        this.precioPorPasajero = precioPorPasajero;
+        this.reservas = reservas;
     }
 
     public Viaje() {

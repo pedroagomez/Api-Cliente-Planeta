@@ -25,8 +25,8 @@ public class ClienteController {
     }
 
     @GetMapping("traer/{id}")
-    public ResponseEntity<ClienteDTO> obtenerClientePorId(@PathVariable Long id) {
-        ClienteDTO cliente = clienteService.obtenerClientePorId(id);
+    public ResponseEntity<Cliente> obtenerClientePorId(@PathVariable Long id) {
+        Cliente cliente = clienteService.obtenerClientePorId(id);
         return ResponseEntity.ok(cliente);
     }
 
@@ -44,9 +44,9 @@ public class ClienteController {
     }
 
     @PutMapping("actualizar/{id}")
-    public ResponseEntity<ClienteDTO> actualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
+    public ResponseEntity<Cliente> actualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
         // Verifica si el cliente existe
-        ClienteDTO clienteExistenteDTO = clienteService.obtenerClientePorId(id);
+        Cliente clienteExistenteDTO = clienteService.obtenerClientePorId(id);
         if (clienteExistenteDTO == null) {
             return ResponseEntity.notFound().build();
         }
