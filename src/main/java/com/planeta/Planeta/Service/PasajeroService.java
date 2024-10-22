@@ -5,6 +5,7 @@ import com.planeta.Planeta.Model.Pasajero;
 import com.planeta.Planeta.Repository.IPasajeroRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ public class PasajeroService implements IPasajeroService {
 
     @Autowired
     private IPasajeroRepository pasajeroRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public void crearPasajero(Pasajero pasajero) {
