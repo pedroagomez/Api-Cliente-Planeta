@@ -32,7 +32,7 @@ public class Reserva {
     private Viaje viaje;
 
     @NotNull(message = "La fecha de reserva es obligatoria")
-    @Future(message = "La fecha de reserva debe estar en el futuro")
+
     private LocalDate fechaReserva;
     ;
 
@@ -40,7 +40,7 @@ public class Reserva {
     private List<Pasajero> pasajeros = new ArrayList<>();
 
     @NotNull(message = "El campo es obligatorio")
-    @Min(value = 1, message = "Los kilómetros cuadrados deben ser al menos 1")
+    @Min(value = 1, message = "El precio tiene que ser superior a 1 ")
     private Double precioTotal;
 
     public Reserva(Long id, Cliente cliente, Viaje viaje, LocalDate fechaReserva, List<Pasajero> pasajeros, Double precioTotal) {

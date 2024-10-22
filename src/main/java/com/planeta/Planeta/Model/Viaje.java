@@ -2,6 +2,9 @@ package com.planeta.Planeta.Model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,10 +26,17 @@ public class Viaje {
     @JoinColumn(name = "planeta_id")
     private Planeta destino;
 
+    @NotNull(message = "La fecha de viaje es obligatoria")
+    @Future(message = "La fecha de reserva debe estar en el futuro")
     private LocalDate fechaViaje;
 
+    @NotNull(message = "El campo capacidad es obligatorio")
+    @Min(value=1, message = "Debe haber al menos 1 asiento ")
     private Integer capacidadTotal;
+    @NotNull(message = "El campo asientos disponibles es obligatorio")
     private Integer asientosDisponibles;
+    @NotNull(message = "El campo precio por pasajero es obligatorio")
+    @Min(value=1, message = "El precio tiene que ser superior a 1 ")
     private Double precioPorPasajero;
 
     @OneToMany(mappedBy = "viaje")

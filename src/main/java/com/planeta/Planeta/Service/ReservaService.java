@@ -47,7 +47,7 @@ public class ReservaService implements IReservaService {
 
         actualizarViaje(viaje, reserva.getPasajeros().size());
 
-        
+
         reservaRepo.save(reserva);
     }
 
@@ -102,10 +102,10 @@ public class ReservaService implements IReservaService {
         // Mapea los pasajeros
         if (reserva.getPasajeros() != null) {
             dto.setPasajeros(reserva.getPasajeros().stream()
-                    .map(this::mapearPasajeroADTO) // Mapea cada pasajero a PasajeroDTO
+                    .map(this::mapearPasajeroADTO)
                     .collect(Collectors.toList()));
         } else {
-            dto.setPasajeros(Collections.emptyList()); // Asigna una lista vacía si no hay pasajeros
+            dto.setPasajeros(Collections.emptyList());
         }
 
         dto.setPrecioTotal(reserva.getPrecioTotal());

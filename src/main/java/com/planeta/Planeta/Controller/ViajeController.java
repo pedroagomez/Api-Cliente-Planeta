@@ -4,11 +4,13 @@ import com.planeta.Planeta.DTO.ViajeDTO;
 import com.planeta.Planeta.Model.Viaje;
 import com.planeta.Planeta.Service.IViajeService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -35,10 +37,18 @@ public class ViajeController {
         }
     }
     @PostMapping("/crear")
-    public ResponseEntity<?> crearViaje(@RequestBody Viaje viaje)
+    public ResponseEntity<?> crearViaje(@Valid @RequestBody Viaje viaje)
     {
-        viajeService.crearViaje(viaje);
-        return ResponseEntity.created(null).build();
+        try
+        {
+            viajeService.crearViaje(viaje);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("mensaje", "Error al crear viaje: " + e.getMessage()));
+        }
+
     }
 
 
