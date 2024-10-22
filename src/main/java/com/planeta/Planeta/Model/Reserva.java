@@ -1,6 +1,10 @@
 package com.planeta.Planeta.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,17 +23,24 @@ public class Reserva {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cliente_id")
+    @NotNull(message = "El cliente no puede ser nulo")
     private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "viaje_id")
+    @NotNull(message = "El viaje no puede ser nulo")
     private Viaje viaje;
 
+    @NotNull(message = "La fecha de reserva es obligatoria")
+    @Future(message = "La fecha de reserva debe estar en el futuro")
     private LocalDate fechaReserva;
+    ;
 
     @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pasajero> pasajeros = new ArrayList<>();
 
+    @NotNull(message = "El campo es obligatorio")
+    @Min(value = 1, message = "Los kilómetros cuadrados deben ser al menos 1")
     private Double precioTotal;
 
     public Reserva(Long id, Cliente cliente, Viaje viaje, LocalDate fechaReserva, List<Pasajero> pasajeros, Double precioTotal) {

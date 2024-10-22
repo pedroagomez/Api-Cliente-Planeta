@@ -3,11 +3,13 @@ package com.planeta.Planeta.Controller;
 import com.planeta.Planeta.DTO.PasajeroDTO;
 import com.planeta.Planeta.Model.Pasajero;
 import com.planeta.Planeta.Service.IPasajeroService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -32,18 +34,34 @@ public class PasajeroController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<?> crearPasajero(@RequestBody Pasajero pasajero)
+    public ResponseEntity<?> crearPasajero(@Valid @RequestBody Pasajero pasajero)
     {
-        pasajeroService.crearPasajero(pasajero);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        try{
+            pasajeroService.crearPasajero(pasajero);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                   .body(Collections.singletonMap("mensaje", "Error al crear pasajero: " + e.getMessage()));
+        }
+
     }
 
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<PasajeroDTO> actualizarPasajero(@PathVariable Long id,
-                                                          @RequestBody PasajeroDTO pasajero)
+    public ResponseEntity<?> actualizarPasajero(@PathVariable Long id,
+                                                         @Valid @RequestBody PasajeroDTO pasajero)
     {
-        pasajeroService.actualizarPasajero(id,pasajero);
-        return ResponseEntity.ok().build();
+        try
+        {
+            pasajeroService.actualizarPasajero(id,pasajero);
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                   .body(Collections.singletonMap("mensaje", "Error al actualizar pasajero: " + e.getMessage()));
+        }
     }
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> eliminarPasajero(@PathVariable Long id)

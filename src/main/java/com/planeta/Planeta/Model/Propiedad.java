@@ -1,6 +1,7 @@
 package com.planeta.Planeta.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,10 +14,12 @@ public class Propiedad {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id")
+    @NotNull(message = "El cliente no puede ser nulo")
     private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "planeta_id")
+    @NotNull(message = "El planeta no puede ser nulo")
     private Planeta planeta;
 
 

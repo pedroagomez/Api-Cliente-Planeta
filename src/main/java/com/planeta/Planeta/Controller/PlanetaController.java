@@ -3,11 +3,13 @@ package com.planeta.Planeta.Controller;
 import com.planeta.Planeta.DTO.PlanetaDTO;
 import com.planeta.Planeta.Model.Planeta;
 import com.planeta.Planeta.Service.IPlanetaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -32,10 +34,18 @@ public class PlanetaController {
 
 
     @PostMapping("crear")
-    public ResponseEntity<?> crearPlaneta(@RequestBody Planeta planeta)
+    public ResponseEntity<?> crearPlaneta(@Valid @RequestBody Planeta planeta)
     {
-        planetaService.createPlaneta(planeta);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        try{
+            planetaService.createPlaneta(planeta);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
+                    body(Collections.singletonMap("mensaje","Error al crear pasajero "+ e.getMessage()));
+        }
+
     }
     @DeleteMapping("eliminar/{id}")
     public ResponseEntity<Void> eliminarPlaneta(@PathVariable Long id) {
@@ -44,9 +54,17 @@ public class PlanetaController {
     }
 
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<Void> actualizarPlaneta(@PathVariable Long id, @RequestBody Planeta planeta) {
-        planetaService.actualizarPlaneta(planeta);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> actualizarPlaneta(@PathVariable Long id, @Valid @RequestBody Planeta planeta) {
+
+        try{
+            planetaService.actualizarPlaneta(planeta);
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
+                    body(Collections.singletonMap("mensaje","Error al actualizar pasajero "+ e.getMessage()));
+        }
     }
 }
 

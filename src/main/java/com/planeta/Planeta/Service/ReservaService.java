@@ -29,25 +29,25 @@ public class ReservaService implements IReservaService {
 
     @Override
     public void realizarReserva(Reserva reserva) {
-        // Obtiene el viaje a partir del ID de la reserva
+
         Viaje viaje = viajeService.obtenerViajePorId(reserva.getViaje().getId());
 
-        // Establece el viaje en la reserva
+
         reserva.setViaje(viaje);
 
-        // Establecer la lista de pasajeros en la reserva
+
         for (Pasajero pasajero : reserva.getPasajeros()) {
-            pasajero.setReserva(reserva); // Asigna la reserva al pasajero
+            pasajero.setReserva(reserva);
 
         }
 
-        // Llama al método de validación
+
         validarReserva(reserva);
 
-        // Actualiza el viaje para reflejar la nueva reserva
+
         actualizarViaje(viaje, reserva.getPasajeros().size());
 
-        // Guarda la reserva
+        
         reservaRepo.save(reserva);
     }
 
@@ -56,18 +56,14 @@ public class ReservaService implements IReservaService {
     private void validarReserva(Reserva reserva) {
         Viaje viaje = reserva.getViaje();
 
-        // Asegúrate de que el viaje no sea nulo
         if (viaje == null) {
-            throw new IllegalArgumentException("El viaje no está disponible.");
+            throw new IllegalArgumentException("El viaje no esta disponible.");
         }
 
-        // Verifica que asientosDisponibles no sea nulo o menor a cero
         Integer asientosDisponibles = viaje.getAsientosDisponibles();
         if (asientosDisponibles == null || asientosDisponibles <= 0) {
             throw new IllegalArgumentException("El viaje no tiene asientos disponibles.");
         }
-
-        // Permitir la reserva si hay suficientes asientos
         if (asientosDisponibles < reserva.getPasajeros().size()) {
             throw new IllegalArgumentException("No hay suficientes asientos disponibles para la reserva.");
         }
@@ -96,7 +92,6 @@ public class ReservaService implements IReservaService {
         return mapearReservaADTO(reserva);
     }
 
-    // Método auxiliar para mapear una Reserva a ReservaDTO
     private ReservaDTO mapearReservaADTO(Reserva reserva) {
         ReservaDTO dto = new ReservaDTO();
         dto.setId(reserva.getId());
@@ -119,26 +114,26 @@ public class ReservaService implements IReservaService {
     }
 
 
-    // Método auxiliar para mapear un Pasajero a PasajeroDTO
+
     private PasajeroDTO mapearPasajeroADTO(Pasajero pasajero) {
         PasajeroDTO dto = new PasajeroDTO();
         dto.setId(pasajero.getId());
         dto.setNombre(pasajero.getNombre());
         dto.setApellido(pasajero.getApellido());
         dto.setEmail(pasajero.getEmail());
-        // Asigna el ID de reserva si es necesario
+
         return dto;
     }
 
     private ViajeDTO mapearViajeADTO(Viaje viaje) {
         if (viaje == null) {
-            return null; // Maneja el caso cuando el viaje es nulo
+            return null;
         }
 
         ViajeDTO dto = new ViajeDTO();
         dto.setId(viaje.getId());
         dto.setFechaSalida(viaje.getFechaViaje());
-        dto.setDestino(mapearPlanetaADTO(viaje.getDestino())); // Asegúrate de tener un método para mapear Planeta a PlanetaDTO
+        dto.setDestino(mapearPlanetaADTO(viaje.getDestino()));
         dto.setAsientosDisponibles(viaje.getAsientosDisponibles());
         dto.setCapacidadTotal(viaje.getCapacidadTotal());
         dto.setPrecioPorPasajero(viaje.getPrecioPorPasajero());
@@ -149,7 +144,7 @@ public class ReservaService implements IReservaService {
 
     private PlanetaDTO mapearPlanetaADTO(Planeta planeta) {
         if (planeta == null) {
-            return null; // Maneja el caso cuando el planeta es nulo
+            return null;
         }
 
         PlanetaDTO dto = new PlanetaDTO();

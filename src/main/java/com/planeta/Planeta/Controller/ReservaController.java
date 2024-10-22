@@ -9,6 +9,7 @@ import com.planeta.Planeta.Model.Viaje;
 import com.planeta.Planeta.Service.IClienteService;
 import com.planeta.Planeta.Service.IReservaService;
 import com.planeta.Planeta.Service.IViajeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,33 +47,28 @@ public class ReservaController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<ReservaDTO> crearReserva(@RequestBody ReservaDTO reservaDTO) {
-        // Obtener el cliente por ID desde la reserva DTO
+    public ResponseEntity<ReservaDTO> crearReserva(@Valid @RequestBody ReservaDTO reservaDTO) {
+
         Cliente cliente = clienteService.obtenerClientePorId(reservaDTO.getClienteId());
 
-        // Obtener el viaje por ID desde la reserva DTO
         Viaje viaje = viajeService.obtenerViajePorId(reservaDTO.getViaje().getId());
-
-        // Crear la reserva
         Reserva reserva = new Reserva();
-        reserva.setCliente(cliente); // Asignar cliente existente
-        reserva.setViaje(viaje); // Asignar viaje existente
-        reserva.setFechaReserva(LocalDate.now()); // Establecer la fecha de reserva
+        reserva.setCliente(cliente);
+        reserva.setViaje(viaje);
+        reserva.setFechaReserva(LocalDate.now());
         reserva.setPasajeros(reservaDTO.getPasajeros().stream()
-                .map(this::mapearPasajero) // Mapear pasajeros de DTO a entidad
+                .map(this::mapearPasajero)
                 .collect(Collectors.toList()));
         reserva.setPrecioTotal(calcularPrecioTotal(viaje, reserva.getPasajeros().size())); // Calcular el precio total
 
-        // Realizar la reserva
         reservaService.realizarReserva(reserva);
 
-        // Mapear la reserva a DTO para la respuesta
         ReservaDTO reservaRespuesta = reservaService.obtenerReservaPorId(reserva.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(reservaRespuesta);
     }
 
-    // Método auxiliar para mapear PasajeroDTO a Pasajero
+
     private Pasajero mapearPasajero(PasajeroDTO pasajeroDTO) {
         Pasajero pasajero = new Pasajero();
         pasajero.setNombre(pasajeroDTO.getNombre());
@@ -81,7 +77,7 @@ public class ReservaController {
         return pasajero;
     }
 
-    // Método para calcular el precio total de la reserva
+
     private double calcularPrecioTotal(Viaje viaje, int cantidadPasajeros) {
         return viaje.getPrecioPorPasajero() * cantidadPasajeros;
     }
