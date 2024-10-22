@@ -3,11 +3,13 @@ package com.planeta.Planeta.Controller;
 import com.planeta.Planeta.DTO.ClientePlanetaPropiedadDTO;
 import com.planeta.Planeta.Model.ClientePlanetaPropiedad;
 import com.planeta.Planeta.Service.IClientePlanetaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -18,9 +20,16 @@ public class ClientePlanetaController {
     private IClientePlanetaService clientePlanetaService;
 
     @PostMapping("/crear")
-    public ResponseEntity<Void> crearClientePlaneta(@RequestBody ClientePlanetaPropiedad clientePlanetaPropiedad) {
-        clientePlanetaService.crearClientePlaneta(clientePlanetaPropiedad);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> crearClientePlaneta(@Valid @RequestBody ClientePlanetaPropiedad clientePlanetaPropiedad) {
+
+        try
+        {
+            clientePlanetaService.crearClientePlaneta(clientePlanetaPropiedad);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("mensaje", "Error al crear cliente-planeta: " + e.getMessage()));
+        }
     }
 
     @GetMapping("/{id}")

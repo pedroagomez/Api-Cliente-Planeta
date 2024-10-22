@@ -5,6 +5,7 @@ import com.planeta.Planeta.Model.Cliente;
 
 import com.planeta.Planeta.Service.IClienteService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class ClienteController {
     }
 
     @GetMapping("traer/{id}")
-    public ResponseEntity<?> obtenerClientePorId(@PathVariable Long id) {
+    public ResponseEntity<?> obtenerClientePorId( @PathVariable Long id) {
         try {
             Cliente cliente = clienteService.obtenerClientePorId(id);
             return ResponseEntity.ok(cliente);
@@ -45,7 +46,7 @@ public class ClienteController {
     }
 
     @PostMapping("crear")
-    public ResponseEntity<?> crearCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<?> crearCliente(@Valid @RequestBody Cliente cliente) {
         try {
             clienteService.createCliente(cliente);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -54,6 +55,8 @@ public class ClienteController {
                     .body(Collections.singletonMap("mensaje", "Error al crear cliente: " + e.getMessage()));
         }
     }
+
+
 
     @DeleteMapping("eliminar/{id}")
     public ResponseEntity<?> eliminarCliente(@PathVariable Long id) {
