@@ -9,9 +9,7 @@ import com.planeta.Planeta.Model.Viaje;
 import com.planeta.Planeta.Service.IClienteService;
 import com.planeta.Planeta.Service.IReservaService;
 import com.planeta.Planeta.Service.IViajeService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
