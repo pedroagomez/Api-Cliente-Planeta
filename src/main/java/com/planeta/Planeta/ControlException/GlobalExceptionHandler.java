@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
             String mensajeError = error.getDefaultMessage();
             errores.put(nombreCampo, mensajeError);
         }
-
+            // 
         return ResponseEntity.badRequest().body(errores);
     }
 
