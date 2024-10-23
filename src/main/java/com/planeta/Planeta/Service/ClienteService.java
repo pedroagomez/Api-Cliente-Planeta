@@ -5,7 +5,7 @@ import com.planeta.Planeta.DTO.*;
 import com.planeta.Planeta.Model.*;
 import com.planeta.Planeta.Repository.IClienteRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.query.Page;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
