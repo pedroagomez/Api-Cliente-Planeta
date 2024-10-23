@@ -27,10 +27,16 @@ public class PasajeroController {
     }
 
     @GetMapping("/traer/{id}")
-    public ResponseEntity<PasajeroDTO> obtenerPasajeroPorId(@PathVariable Long id)
+    public ResponseEntity<?> obtenerPasajeroPorId(@PathVariable Long id)
     {
-        PasajeroDTO pasajero = pasajeroService.obtenerPasajeroPorId(id);
-        return ResponseEntity.ok(pasajero);
+        try {
+            PasajeroDTO pasajero = pasajeroService.obtenerPasajeroPorId(id);
+            return ResponseEntity.ok(pasajero);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                   .body(Collections.singletonMap("mensaje", "Error al obtener pasajero: " + e.getMessage()));
+        }
+
     }
 
     @PostMapping("/crear")

@@ -27,9 +27,15 @@ public class PlanetaController {
     }
 
     @GetMapping("traer/{id}")
-    public ResponseEntity<PlanetaDTO> obtenerPlanetaPorId(@PathVariable Long id) {
-        PlanetaDTO planeta = planetaService.obtenerPlanetaPorId(id);
-        return ResponseEntity.ok(planeta);
+    public ResponseEntity<?> obtenerPlanetaPorId(@PathVariable Long id) {
+        try {
+            PlanetaDTO planeta = planetaService.obtenerPlanetaPorId(id);
+            return ResponseEntity.ok(planeta);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).
+                    body(Collections.singletonMap("mensaje","Planeta no encontrado"));
+        }
+
     }
 
 

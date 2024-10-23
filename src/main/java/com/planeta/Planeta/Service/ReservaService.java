@@ -31,24 +31,14 @@ public class ReservaService implements IReservaService {
     public void realizarReserva(Reserva reserva) {
 
         Viaje viaje = viajeService.obtenerViajePorId(reserva.getViaje().getId());
-
-
         reserva.setViaje(viaje);
 
-
-        for (Pasajero pasajero : reserva.getPasajeros()) {
+       for (Pasajero pasajero : reserva.getPasajeros()) {
             pasajero.setReserva(reserva);
-
         }
-
-
         validarReserva(reserva);
-
-
-        actualizarViaje(viaje, reserva.getPasajeros().size());
-
-
-        reservaRepo.save(reserva);
+      actualizarViaje(viaje, reserva.getPasajeros().size());
+       reservaRepo.save(reserva);
     }
 
 

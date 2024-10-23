@@ -32,9 +32,7 @@ public class Reserva {
     private Viaje viaje;
 
     @NotNull(message = "La fecha de reserva es obligatoria")
-
     private LocalDate fechaReserva;
-    ;
 
     @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pasajero> pasajeros = new ArrayList<>();
