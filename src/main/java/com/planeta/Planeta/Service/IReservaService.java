@@ -11,7 +11,11 @@ public interface IReservaService {
     void crearReserva(Reserva reserva);
     List<ReservaDTO> obtenerReservas();
     ReservaDTO obtenerReservaPorId(Long id);
+<<<<<<< HEAD
     void eliminarReserva(Long id);
+=======
+    void cancelarReserva(Long id);
+>>>>>>> main
 
 
 

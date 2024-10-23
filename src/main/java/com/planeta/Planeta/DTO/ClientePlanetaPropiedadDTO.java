@@ -1,9 +1,11 @@
 package com.planeta.Planeta.DTO;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClientePlanetaPropiedadDTO {
 
     private Long id;
@@ -21,6 +23,13 @@ public class ClientePlanetaPropiedadDTO {
         this.planetaNombre = planetaNombre;
         this.kilometrosCuadrados = kilometrosCuadrados;
     }
+    public ClientePlanetaPropiedadDTO(Long id, Long planetaId, String planetaNombre, Double kilometrosCuadrados) {
+        this.id = id;
+        this.planetaId = planetaId;
+        this.planetaNombre = planetaNombre;
+        this.kilometrosCuadrados = kilometrosCuadrados;
+    }
+
 
     public ClientePlanetaPropiedadDTO() {
     }

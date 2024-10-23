@@ -12,6 +12,7 @@ import java.util.List;
 public class ViajeDTO {
 
     private Long id;
+<<<<<<< HEAD
     private Long planetaId;
     private String planetaNombre;
     private LocalDate fechaSalida;
@@ -30,6 +31,27 @@ public class ViajeDTO {
         this.precioPorPasajero = precioPorPasajero;
         this.pasajeros = pasajeros;
     }
+=======
+    private LocalDate fechaSalida;
+    private PlanetaDTO destino;
+    private Integer asientosDisponibles;
+    private Integer capacidadTotal;
+    private Double precioPorPasajero;
+    private List<ReservaDTO> reservasDto;
+
+    public ViajeDTO(Long id, LocalDate fechaSalida, PlanetaDTO destino, Integer asientosDisponibles, Integer capacidadTotal, Double precioPorPasajero, List<ReservaDTO> reservasDto) {
+        this.id = id;
+        this.fechaSalida = fechaSalida;
+        this.destino = destino;
+        this.asientosDisponibles = asientosDisponibles;
+        this.capacidadTotal = capacidadTotal;
+        this.precioPorPasajero = precioPorPasajero;
+        this.reservasDto = reservasDto;
+    }
+
+    public ViajeDTO()
+    {
+>>>>>>> main
 
     public ViajeDTO() {
     }

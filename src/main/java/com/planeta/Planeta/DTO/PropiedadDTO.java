@@ -5,15 +5,19 @@ import lombok.Setter;
 
 @Getter @Setter
 public class PropiedadDTO {
-    private Long id; // ID de la propiedad
-    private Long planetaId; // ID del planeta
+    private Long id;
+    private Long clienteId;
+    private Long planetaId;
     private Double kilometrosCuadrados;
 
-    public PropiedadDTO(Long id, Long planetaId, Double kilometrosCuadrados) {
+
+    public PropiedadDTO(Long id, Long clienteId, Long planetaId, Double kilometrosCuadrados) {
         this.id = id;
+        this.clienteId = clienteId;
         this.planetaId = planetaId;
         this.kilometrosCuadrados = kilometrosCuadrados;
     }
+
     public PropiedadDTO() {
     }
 }

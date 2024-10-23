@@ -7,22 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
+
 public class ClienteDTO {
     private Long id;
     private String nombre;
     private String apellido;
     private String mail;
+    private List<ClientePlanetaPropiedadDTO> propiedades;
+    private List<ReservaDTO> reservas;
 
-    private List<PropiedadDTO> propiedades;
-    private List<ViajeDTO> viajes;
-
-    public ClienteDTO(Long id, String nombre, String apellido, String mail, List<PropiedadDTO> propiedades, List<ViajeDTO> viajes) {
+    public ClienteDTO(Long id, String nombre, String apellido, String mail, List<ClientePlanetaPropiedadDTO> propiedades, List<ReservaDTO> reservas) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.mail = mail;
         this.propiedades = propiedades;
-        this.viajes = viajes;
+        this.reservas = reservas;
     }
 
     public ClienteDTO() {

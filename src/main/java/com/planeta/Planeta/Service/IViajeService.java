@@ -7,9 +7,14 @@ import java.util.List;
 
 public interface IViajeService {
     void crearViaje(Viaje viaje);
-    ViajeDTO obtenerViajePorId(Long id);
+    Viaje obtenerViajePorId(Long id);
     List<ViajeDTO> obtenerTodosLosViajes();
+<<<<<<< HEAD
     void actualizarViaje(Long id, ViajeDTO viajeDTO);
     void eliminarViaje(Long id);
 
+=======
+    void eliminarViaje(Long id);
+    void actualizarViaje(Viaje viaje);
+>>>>>>> main
 }

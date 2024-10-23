@@ -3,25 +3,36 @@ package com.planeta.Planeta.DTO;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
 public class ReservaDTO {
     private Long id;
-    private Long clienteId; // Solo necesitas el ID del cliente
-    private Long viajeId;   // Solo necesitas el ID del viaje
-    private Date fechaReserva;
-    private Integer cantidadPasajeros;
+    private Long clienteId;
+    private ViajeDTO viaje;
+    private LocalDate fechaReserva;
+    private List<PasajeroDTO> pasajeros;
+    private Double precioTotal;
 
+<<<<<<< HEAD
     private Double precioTotal;
 
     public ReservaDTO(Long id, Long clienteId, Long viajeId, Date fechaReserva, Integer cantidadPasajeros, Double precioTotal) {
+=======
+    public ReservaDTO(Long id, Long clienteId, ViajeDTO viaje, LocalDate fechaReserva, List<PasajeroDTO> pasajeros, Double precioTotal) {
+>>>>>>> main
         this.id = id;
         this.clienteId = clienteId;
-        this.viajeId = viajeId;
+        this.viaje = viaje;
         this.fechaReserva = fechaReserva;
+<<<<<<< HEAD
         this.cantidadPasajeros = cantidadPasajeros;
+=======
+        this.pasajeros = pasajeros;
+>>>>>>> main
         this.precioTotal = precioTotal;
     }
 
